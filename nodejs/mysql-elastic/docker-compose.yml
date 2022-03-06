@@ -1,0 +1,49 @@
+version: "3.0"
+
+services:
+  app:
+    image: canavci/ireland-assist:1.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    command: node app.js
+    restart: always
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_DB: ${DB_DB}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      PORT: ${PORT}
+    ports:
+      - "3000:3000"
+    networks:
+      - ireland-asist
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    networks:
+      - ireland-asist
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - ireland-asist
+  elastic:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    networks:
+      - ireland-asist
+networks:
+  ireland-asist:
